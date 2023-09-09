@@ -1,0 +1,226 @@
+/*
+ * Tarefa 01 - Grafo - Listas de Adjacencia
+ *
+ * GEN254 - Grafos - 2023/2
+ *
+ * Nome:      XXXX
+ * Matricula: XXXX
+ */
+
+/* Complete aqui */
+
+#include "Grafo.h"
+#include <iostream>
+#include <vector>
+#include <list>
+#include <algorithm>
+
+using namespace std;
+
+Grafo:: Grafo(int num_vertices){
+    num_vertices_ = num_vertices;
+    num_arestas_ = 0;
+    list_adj_.resize(num_vertices);
+    // for(int i = 0; i< num_vertices;i++){
+    //     list_adj_[i].push_back(i); 
+    // }
+ }
+
+
+void Grafo::insere_aresta(Aresta e){
+    if(e.v1 == e.v2){
+        return;
+    }
+    auto iterador = find(list_adj_[e.v1].begin(), list_adj_[e.v1].end(), e.v2);
+    if (iterador != list_adj_[e.v1].end()) {
+      //  std::cout << "Aresta já existentes: " << endl;
+    } else {
+        list_adj_[e.v1].push_front(e.v2);
+        list_adj_[e.v2].push_front(e.v1);
+
+        num_arestas_++;
+    }
+}
+int Grafo::num_arestas(){
+    // int contador = 0;
+    // for(const auto lista : list_adj_){
+    //     contador+= lista.size();
+    // }
+    // return contador/2;
+    return num_arestas_;
+}
+int Grafo :: num_vertices(){
+    return num_vertices_;
+}
+
+void Grafo::remove_aresta(Aresta e){  
+    auto iterador = find(list_adj_[e.v1].begin(), list_adj_[e.v1].end(), e.v2);
+        if (iterador != list_adj_[e.v1].end()) {
+            list_adj_[e.v1].remove(e.v2);
+            list_adj_[e.v2].remove(e.v1);
+            num_arestas_--;
+        }
+}
+
+
+void Grafo::imprime(){
+    for(int i = 0;i < list_adj_.size();i++){
+        cout <<  i << ":";
+        for(const int& vertice : list_adj_[i]){
+            cout<< " " << vertice;
+        }
+        cout << endl;
+    }
+}
+
+void Grafo::remove_vertice(int v){
+    //imprime();
+    //cout << "INICIO" << endl;
+    for(int i =0;i < list_adj_.size();i++){
+        if(i == v){
+
+        // auto ite = list_adj_.begin() + i;
+        // list_adj_.erase(ite);
+        // num_arestas_--;
+        //cout << list_adj_.size()<<endl;
+//imprime();
+
+            //cout << "Aqui 1" << endl;
+            for(auto vizinho: list_adj_[i]){
+                Aresta e(v,vizinho);
+            //    cout << "Ponto 1: " << e.v1 << endl;
+          //      cout << "Ponto 2: " << e.v2 << endl;
+                remove_aresta(e);
+        //        imprime();
+      //          cout << "Aqui 2" << endl;
+                break;
+            }
+        }
+    }
+    
+    // for(int i = 0; i < list_adj_.size();i++){
+    //     for(auto vertice : list_adj_[i]){
+    //         if(vertice == v){
+    //             //cout << "Achei" << endl;
+    //             list_adj_[i].remove(vertice);
+    //             //cout << vertice << endl;
+    //             break;
+    //         }
+    //         //cout << "TERMINADO 1" << endl;
+    //     }
+    //         //cout << "TERMINADO 2" << endl;
+    // }
+    //cout << "Depois da secunda remocão" << endl;
+   // imprime();
+    //cout << " Etapa 1 feito" << endl;
+    for(int i = 0;i < list_adj_.size();i++){
+        for(int& vertice: list_adj_[i]){
+            if(vertice > v){
+           // cout << "Aqui 3" << endl;
+                vertice -=1;
+                //cout << "novo vertice :" << vertice << endl;
+            }
+        }
+    }
+    //cout << "Depois da diminucao" << endl;
+    //imprime();
+    //cout << "Etapa 2 feito" << endl;
+
+    for(int i =0;i< list_adj_.size()-1;i++){
+        if(i >v){
+            //cout << "Aqui 4" << endl;
+            list_adj_[i] = list_adj_[i+1];
+        }
+    }
+    num_vertices_--;
+    //cout << "Aqui 5" << endl;
+    list_adj_.resize(num_vertices_);
+
+    //cout << "Etapa 3 feito" << endl;
+    //cout  << " No final :" << endl;
+    //imprime();
+
+}
+
+
+//  for(int i = 0;i < list_adj_.size();i++){
+//         if(i == v){
+//             cout<< "encontrado" << endl;
+//             for(int& vertice:list_adj_[v]){
+//                 cout<< "encontrado1" << endl;
+//                 cout << vertice;
+//                 Aresta e(v,vertice);
+//                 cout<< "encontrado2" << endl;
+//                 remove_aresta(e);
+//                 cout<< "encontrado3" << endl;
+//             }
+//                 cout<< "encontrado4" << endl;
+
+//         }
+//     }
+
+// void Grafo:: remove_vertice(int v){
+//     num_vertices_--;
+//     //for(int i = 0;i < list_adj_.size();i++){
+//       //  if(i == v){
+//             //cout<< "encontrado" << endl;
+//             for(int& vertice:list_adj_[v]){
+//                // cout<< "encontrado1" << endl;
+//                // cout << vertice << endl;;
+//                 Aresta e(v,vertice);
+//                // cout<< "encontrado2" << endl;
+//                 remove_aresta(e);
+//                // cout<< "encontrado3" << endl;
+//                 break;
+//             }
+// //                 cout<< "encontrado4" << endl;
+
+//     //     }
+//     //}
+
+//     for(int i = 0;i< list_adj_.size();i++){
+//         for(auto& vertice : list_adj_[i]){
+//             if(i > v){
+//                 vertice--;
+//             }
+//         }
+//     }
+//     for (int i = 0; i < list_adj_.size() - 1; i++) {
+//         if(i>=v){
+//             list_adj_[i] = list_adj_[i + 1];
+//         }
+//     }
+    
+//     list_adj_.resize(list_adj_.size() - 1);
+    
+
+//     // auto iterador = find(list_adj_[e.v1].begin(), list_adj_[e.v1].end(), e.v2);
+//     // if (iterador != list_adj_[e.v1].end()) {
+//     //     std::cout << "Aresta já existentes: " << endl;
+//     // } else {
+//     //     list_adj_[e.v1].push_back(e.v2);
+//     //     list_adj_[e.v2].push_back(e.v1);
+
+//     //     num_arestas_++;
+//     // }
+//     // for(int i = 0;i < list_adj_.size()-1;i++){
+//     //     // if(i< list_adj_.size()){
+//     //     //     auto& aux = list_adj_[i+1];
+//     //     //     list_adj_[i] = aux;
+//     //     // }
+//     //     list_adj_[i] = list_adj_[i + 1];
+//     // }
+    
+//     // for (int& vizinho : list_adj_[v]) {
+//     //     Aresta e(v, vizinho);
+//     //     remove_aresta(e);
+//     // }
+    
+
+    
+
+// }
+
+
+
+//e9M60&J%
